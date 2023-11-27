@@ -1,5 +1,7 @@
 package homeWorkPart2.io;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,6 +14,7 @@ public class Main {
     public static void main(String[] args) {
 
         listOfFilesAndDirectories("src/main/java/homeWorkPart2");
+        readLineByLine("src/main/java/homeWorkPart2/io/toBeOrNotToBe.txt");
     }
 
     public static void listOfFilesAndDirectories(String directoryPath) {
@@ -24,4 +27,18 @@ public class Main {
             e.printStackTrace();
         }
     }
+
+    public static void readLineByLine(String directoryPath) {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(directoryPath))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
