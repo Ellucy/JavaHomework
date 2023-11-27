@@ -23,8 +23,8 @@ public class UserValidator {
 
         public void validateEmails(String email, String alternativeEmail) {
 
-            Email emailFormatted = new Email(email == null ? "unknown" : email);
-            Email alternativeEmailFormatted = new Email(alternativeEmail == null ? "unknown" : alternativeEmail);
+            Email emailFormatted = new Email(email == null || email.isEmpty() ? "unknown" : email);
+            Email alternativeEmailFormatted = new Email(alternativeEmail == null || alternativeEmail.isEmpty() ? "unknown" : alternativeEmail);
 
             if (!emailFormatted.isValidEmail()) {
                 emailFormatted = new Email("unknown");

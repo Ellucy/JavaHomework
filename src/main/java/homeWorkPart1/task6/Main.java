@@ -36,7 +36,7 @@ public class Main {
         }
 
 
-        myBookRepository.removeBook(5);
+        myBookRepository.removeBookV2(5);
 
         try {
             Book book = myBookRepository.findBookById(5);

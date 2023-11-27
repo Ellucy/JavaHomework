@@ -9,7 +9,7 @@ public class Main {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String line = new String(new char[60]).replace('\0', '-');
 
-        Circle myCircle = new Circle(5);
+        GeometricObject myCircle = new Circle(5);
 
         System.out.println(decimalFormat.format(myCircle.getArea()));
         System.out.println(decimalFormat.format(myCircle.getPerimeter()));

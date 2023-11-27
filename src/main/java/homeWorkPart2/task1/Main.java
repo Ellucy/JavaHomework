@@ -11,6 +11,8 @@ public class Main {
 
         eleriEmail.validateEmails(eleriEmail.formatEmail(), alternativeEmail);
 
+        String alternativeEmail2 = "";
+        eleriEmail.validateEmails(eleriEmail.formatEmail(), alternativeEmail2);
     }
 
 

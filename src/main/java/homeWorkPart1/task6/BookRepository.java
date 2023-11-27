@@ -12,19 +12,20 @@ public class BookRepository {
         books.add(book);
     }
 
-//    public void removeBook1(int id) {
-//        books.removeIf(book -> book.getId() == id);
-//    }
-
     public void removeBook(int id) {
-        Iterator<Book> iterator = books.iterator();
-        while (iterator.hasNext()) {
-            Book book = iterator.next();
+        books.removeIf(book -> book.getId() == id);
+    }
+
+    //Removing book using foreach (enhanced for) loop
+    public void removeBookV2(int id) {
+        List<Book> booksToRemove = new ArrayList<>();
+
+        for (Book book : books) {
             if (book.getId() == id) {
-                iterator.remove();
-                return;
+                booksToRemove.add(book);
             }
         }
+        books.removeAll(booksToRemove);
     }
 
     public Book findBookById(int id) throws NoBookFoundException {
