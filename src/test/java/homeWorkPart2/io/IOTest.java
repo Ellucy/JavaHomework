@@ -3,12 +3,19 @@ package homeWorkPart2.io;
 import static org.junit.jupiter.api.Assertions.*;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class IOTest {
+
+    private static final String TEST_FILE_PATH = "src/test/java/resources/testFile.txt";
+    private static final String CONTENT_TO_APPEND = "Content to append.";
 
     @Test
     public void testListOfFilesAndDirectories() {
@@ -53,6 +60,45 @@ public class IOTest {
                 To die, to sleep;
                 Author: William Shakespeare (Hamlet, Act 3, Scene 1)""";
 
+        //Works only if original file is NOT modified
         assertEquals(expectedOutput, outputStream.toString().replaceAll("\\r\\n", "\n").trim());
+    }
+
+    @BeforeEach
+    public void setUp() throws IOException {
+        // Create a test file with initial content
+        Path filePath = Paths.get(TEST_FILE_PATH);
+        Files.write(filePath, "Initial content.".getBytes());
+        System.out.println("Test file created at: " + filePath.toAbsolutePath());
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        // Delete the test file after each test
+        Files.deleteIfExists(Paths.get(TEST_FILE_PATH));
+    }
+
+    @Test
+    public void testAppendToFile() throws IOException {
+        // Append content to the test file
+        Main.appendToFile(TEST_FILE_PATH, CONTENT_TO_APPEND);
+
+        // Read the content of the file after appending
+        String appendedContent = readFromFile(TEST_FILE_PATH);
+
+        // Verify that the content has been appended
+        assertTrue(appendedContent.contains("Initial content.")); // Existing content
+        assertTrue(appendedContent.contains(CONTENT_TO_APPEND));  // Appended content
+    }
+
+    private String readFromFile(String filePath) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            return content.toString();
+        }
     }
 }

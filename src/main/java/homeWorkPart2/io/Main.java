@@ -1,8 +1,6 @@
 package homeWorkPart2.io;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
@@ -15,6 +13,9 @@ public class Main {
 
         listOfFilesAndDirectories("src/main/java/homeWorkPart2");
         readLineByLine("src/main/java/homeWorkPart2/io/toBeOrNotToBe.txt");
+
+        String text = "\nWilliam Shakespeare (1564-1616) was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language and the world's greatest dramatist.";
+        appendToFile("src/main/java/homeWorkPart2/io/toBeOrNotToBe.txt", text);
     }
 
     public static void listOfFilesAndDirectories(String directoryPath) {
@@ -36,6 +37,16 @@ public class Main {
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void appendToFile(String filePath, String content) {
+
+        //append has to be true, so it doesn't overwrite the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(content);
         } catch (IOException e) {
             e.printStackTrace();
         }
