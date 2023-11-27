@@ -16,6 +16,8 @@ public class Main {
 
         String text = "\nWilliam Shakespeare (1564-1616) was an English playwright, poet, and actor, widely regarded as the greatest writer in the English language and the world's greatest dramatist.";
         appendToFile("src/main/java/homeWorkPart2/io/toBeOrNotToBe.txt", text);
+
+        System.out.println(findLongestWord("src/main/java/homeWorkPart2/io/toBeOrNotToBe.txt"));
     }
 
     public static void listOfFilesAndDirectories(String directoryPath) {
@@ -50,6 +52,30 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String findLongestWord(String filePath) {
+
+        String longestWord = "";
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] words = line.split("\\s+");
+                for (String word : words) {
+
+                    if (word.length() > longestWord.length()) {
+                        longestWord = word;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("The length of the longest word is " + longestWord.length() + " characters.");
+        return longestWord;
     }
 }
 
