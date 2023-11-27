@@ -1,0 +1,11 @@
+Every class in Java extends class Object. Class Object is the mother of
+all classes. It’s the superclass of everything.
+Even if you take advantage of polymorphism, you still have to create a class
+with methods that take and return your polymorphic type. Without a common
+superclass for everything in Java, there’d be no way for the developers of Java
+to create classes with methods that could take your custom types...types they
+never knew about when they wrote the library class.
+So you were making subclasses of class Object from the very beginning and you
+didn’t even know it. Every class you write extends Object, without your ever
+having to say it.
+"Head First Java" by Kathy Sierra, Bert Bates, and Trisha Gee (Page 210)
