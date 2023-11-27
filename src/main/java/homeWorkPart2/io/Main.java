@@ -65,8 +65,10 @@ public class Main {
                 String[] words = line.split("\\s+");
                 for (String word : words) {
 
-                    if (word.length() > longestWord.length()) {
-                        longestWord = word;
+                    String cleanWord = word.replaceAll("[^a-zA-Z]", "");
+
+                    if (cleanWord.length() > longestWord.length()) {
+                        longestWord = cleanWord;
                     }
                 }
             }

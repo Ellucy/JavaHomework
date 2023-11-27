@@ -85,7 +85,7 @@ public class IOTest {
 
     @BeforeEach
     public void setUpGetLongestWord() throws IOException {
-        Files.write(Path.of(TEST_FILE_PATH_3), "To be or not to be, that is the question".getBytes());
+        Files.write(Path.of(TEST_FILE_PATH_3), "To be or not to be, that is the question.".getBytes());
     }
 
     @AfterEach
