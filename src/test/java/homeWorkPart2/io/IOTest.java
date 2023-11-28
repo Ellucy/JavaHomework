@@ -1,8 +1,6 @@
 package homeWorkPart2.io;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import junit.framework.TestCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,25 +9,81 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 public class IOTest {
 
     private static final String TEST_FILE_PATH = "src/test/java/resources/testFile.txt";
     private static final String CONTENT_TO_APPEND = "Content to append.";
-    private static final String ORIGINAL_FILE_PATH = "src/main/java/homeWorkPart2/io/toBeOrNotToBe.txt";
     private static final String ANOTHER_TEST_FILE_PATH = "src/test/java/resources/anotherTestFile.txt";
     private static final String TEST_FILE_PATH_3 = "src/test/java/resources/testFile3.txt";
+    private static final String TEST_CSV_PATH = "testCsvFile.csv";
 
     private ByteArrayOutputStream outputStream;
 
     String expectedOutput = """
-                To be or not to be, that is the question: Whether 'tis nobler in the
-                mind to suffer The slings and arrows of outrageous fortune, Or to take
-                arms against a sea of troubles And, by opposing, end them.
-                To die: to sleep;
-                Author: William Shakespeare (Hamlet, Act 3, Scene 1)""";
+            To be or not to be, that is the question: Whether 'tis nobler in the
+            mind to suffer The slings and arrows of outrageous fortune, Or to take
+            arms against a sea of troubles And, by opposing, end them.
+            To die: to sleep;
+            Author: William Shakespeare (Hamlet, Act 3, Scene 1)""";
 
+    @BeforeEach
+    public void setUp() throws IOException {
+        // Create a test file with initial content
+        Path filePath = Paths.get(TEST_FILE_PATH);
+        Files.write(filePath, "Initial content.".getBytes());
+        System.out.println("Test file created at: " + filePath.toAbsolutePath());
+    }
+
+    @BeforeEach
+    public void setUpReadBYLine() throws IOException {
+
+        Files.write(Path.of(ANOTHER_TEST_FILE_PATH), expectedOutput.getBytes());
+        // Redirect System.out to capture the printed output
+        outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+    }
+
+    @BeforeEach
+    public void setUpGetLongestWord() throws IOException {
+        Files.write(Path.of(TEST_FILE_PATH_3), "To be or not to be, that is the question.".getBytes());
+    }
+
+    @BeforeEach
+    public void setUpCsv() throws IOException {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(TEST_CSV_PATH))) {
+            writer.write("John,Smith,23\n");
+            writer.write("Sam,Johnson,40\n");
+            writer.write("Andrew,Manly,43\n");
+        }
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        // Delete the test file after each test
+        Files.deleteIfExists(Paths.get(TEST_FILE_PATH));
+    }
+
+    @AfterEach
+    public void tearDownReadBYLine() throws IOException {
+        // Reset System.out
+        System.setOut(System.out);
+
+        // Clean up the temporary file
+        Files.deleteIfExists(Path.of(ANOTHER_TEST_FILE_PATH));
+    }
+
+    @AfterEach
+    public void tearDownLongestWord() throws IOException {
+        Files.deleteIfExists(Path.of(TEST_FILE_PATH_3));
+    }
+
+    @AfterEach
+    public void tearDownCsv() throws IOException {
+        Files.deleteIfExists(Path.of(TEST_CSV_PATH));
+    }
 
     @Test
     public void testListOfFilesAndDirectories() {
@@ -49,48 +103,6 @@ public class IOTest {
                         "src/main/java/homeWorkPart2/generics/Book.java\n" +
                         "src/main/java/homeWorkPart2/generics/Main.java\n";
         assertEquals(expectedOutput, outputStream.toString());
-    }
-
-    @BeforeEach
-    public void setUpReadBYLine() throws IOException {
-
-        Files.write(Path.of(ANOTHER_TEST_FILE_PATH), expectedOutput.getBytes());
-        // Redirect System.out to capture the printed output
-        outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
-    }
-
-    @AfterEach
-    public void tearDownReadBYLine() throws IOException {
-        // Reset System.out
-        System.setOut(System.out);
-
-        // Clean up the temporary file
-        Files.deleteIfExists(Path.of(ANOTHER_TEST_FILE_PATH));
-    }
-
-    @BeforeEach
-    public void setUp() throws IOException {
-        // Create a test file with initial content
-        Path filePath = Paths.get(TEST_FILE_PATH);
-        Files.write(filePath, "Initial content.".getBytes());
-        System.out.println("Test file created at: " + filePath.toAbsolutePath());
-    }
-
-    @AfterEach
-    public void tearDown() throws IOException {
-        // Delete the test file after each test
-        Files.deleteIfExists(Paths.get(TEST_FILE_PATH));
-    }
-
-    @BeforeEach
-    public void setUpGetLongestWord() throws IOException {
-        Files.write(Path.of(TEST_FILE_PATH_3), "To be or not to be, that is the question.".getBytes());
-    }
-
-    @AfterEach
-    public void tearDownLongestWord() throws IOException {
-        Files.deleteIfExists(Path.of(TEST_FILE_PATH_3));
     }
 
     @Test
@@ -118,6 +130,31 @@ public class IOTest {
     public void testFindLongestWord() {
         String longestWord = Main.findLongestWord(TEST_FILE_PATH_3);
         assertEquals("question", longestWord);
+    }
+
+    @Test
+    public void testCsvParser() {
+        String longestWord = Main.findLongestWord(TEST_FILE_PATH_3);
+        assertEquals("question", longestWord);
+    }
+
+    @Test
+    public void testParseCsv() {
+        List<User> users = Main.csvParser(TEST_CSV_PATH);
+
+        assertEquals(3, users.size());
+
+        assertEquals("John", users.get(0).getName());
+        assertEquals("Smith", users.get(0).getSurname());
+        assertEquals(23, users.get(0).getAge());
+
+        assertEquals("Sam", users.get(1).getName());
+        assertEquals("Johnson", users.get(1).getSurname());
+        assertEquals(40, users.get(1).getAge());
+
+        assertEquals("Andrew", users.get(2).getName());
+        assertEquals("Manly", users.get(2).getSurname());
+        assertEquals(43, users.get(2).getAge());
     }
 
     private String readFromFile(String filePath) throws IOException {
